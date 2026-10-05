@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evolving to Match Capabilities: Improving Harness Self-Evolution via Skill Adaptation</title>
+<meta name="description" content="Skills that improve strong LLM agents can degrade weak ones. We diagnose why, distill the diagnosis into a meta-skill, and use it to improve harness self-evolution across seven executors.">
+<link rel="stylesheet" href="style.css?v=19">
+</head>
+<body>
+
+<!-- ======================= NAV ======================= -->
+<nav class="topnav" aria-label="Page sections">
+  <div class="wrap nav-wrap">
+    <span class="nav-title">Evolving to Match Capabilities</span>
+    <div class="nav-links">
+      <a href="#fig1">Teaser</a><a href="#fig2">Self-Evolution</a><a href="#fig3">Benchmark</a>
+      <a href="#fig4">Method</a><a href="#abstract">Abstract</a><a href="#bibtex">BibTeX</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ======================= HERO (fullscreen video) ======================= -->
+<header class="hero hero-video">
+  <video id="bgvid" autoplay muted loop playsinline preload="auto"
+         poster="assets/teaser_poster.jpg">
+    <source src="assets/teaser.mp4" type="video/mp4">
+  </video>
+  <div class="hero-shade"></div>
+  <div class="wrap hero-content">
+    <h1>Evolving to Match Capabilities</h1>
+    <p class="subtitle">Improving Harness Self-Evolution via <span class="hl">Skill Adaptation</span></p>
+    <div class="authors">
+      <span><a href="https://zhihaoyang30.github.io/" target="_blank" rel="noopener">Zhihao Yang</a><sup>*</sup></span><span><a href="https://haojinw0027.github.io/" target="_blank" rel="noopener">Haojin Wang</a><sup>*</sup></span><span><a href="https://chtholly17.github.io/" target="_blank" rel="noopener">Juncheng Wu</a><sup>*</sup></span><span><a href="https://itheresaapocalypse.github.io/" target="_blank" rel="noopener">Kuan Zhang</a></span><span><a href="https://scholar.google.com/citations?user=JWxSJVgAAAAJ&amp;hl=zh-CN" target="_blank" rel="noopener">Yukun Chen</a></span><span><a href="https://rainbowluocs.github.io/" target="_blank" rel="noopener">Run Luo</a></span><span><a href="https://yaojie.lu/" target="_blank" rel="noopener">Yaojie Lu</a></span><span><a href="https://yuyinzhou.github.io/" target="_blank" rel="noopener">Yuyin Zhou</a></span><span><a href="https://openreview.net/profile?id=~Lu_Wang26" target="_blank" rel="noopener">Lu Wang</a><sup>†</sup></span><span><a href="https://scholar.google.com/citations?user=pA88bm4AAAAJ&amp;hl=en" target="_blank" rel="noopener">Xianpei Han</a><sup>†</sup></span>
+    </div>
+    <p class="author-note"><sup>*</sup> equal contribution · <sup>†</sup> corresponding authors</p>
+    <nav class="hero-links">
+      <a class="btn btn-solid" href="paper.pdf" target="_blank" rel="noopener"><svg class="bi" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M14 2v6h6M9 13h6M9 17h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Paper</a>
+      <a class="btn btn-ghost" href="#" title="arXiv link coming soon"><svg class="bi" viewBox="0 0 24 24"><path d="M5 4l10 16M19 4L9 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>arXiv</a>
+      <a class="btn btn-ghost" href="#video-sec"><svg class="bi" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 8.5v7l6-3.5z" fill="currentColor"/></svg>Video</a>
+    </nav>
+  </div>
+  <button id="vidctl" class="vid-ctl" aria-label="Replay background video">↻</button>
+  <a class="scroll-cue" href="#fig1" aria-label="Scroll to content">⌄</a>
+</header>
+
+<main>
+
+<!-- ======================= FIG 1 ======================= -->
+<section id="fig1" class="section">
+  <div class="wrap">
+    <h2><span class="fig-tag">Figure 1</span> Skill benefit tracks base capability</h2>
+    <p class="section-lede">
+      The same skill library, seven executors. <b>Click a tier region</b> — weak, medium, or
+      strong — to see what happens inside it, and hover any model for its exact numbers.
+    </p>
+
+    <div class="fig1-grid">
+      <div class="panel" id="fig1a-panel">
+        <div class="panel-head">(a) Skill benefit vs. base capability <span class="hint">layout follows the paper's teaser (qualitative); hover a model for measured numbers · click a shaded region</span></div>
+        <div id="fig1a"></div>
+        <div id="tier-detail" class="tier-detail" aria-live="polite" hidden></div>
+      </div>
+
+      <div class="panel" id="fig1b-panel">
+        <div class="panel-head">(b) One skill, two executors</div>
+        <div id="fig1b"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= FIG 2 ======================= -->
+<section id="fig2" class="section section-alt">
+  <div class="wrap">
+    <h2><span class="fig-tag">Figure 2</span> Skill adaptation in self-evolution</h2>
+    <p class="section-lede">
+      Five rounds of harness self-evolution: each round, the model revises its own skill from
+      execution trajectories and verifier feedback, guided by the <b>meta-skill</b>.
+      The panel below cycles through the five rounds automatically — hover to pause.
+    </p>
+
+    <div class="fig2-stack">
+      <div class="panel">
+        <div class="panel-head">Task score over evolve rounds</div>
+        <div id="fig2chart"></div>
+        <div class="legend-row legend-fig2" aria-hidden="false">
+          <span class="lg"><span class="lgline solid"></span> w/ skill adaptation (meta-skill)</span>
+          <span class="lg"><span class="lgline dashed"></span> w/o</span>
+        </div>
+        <div class="round-controls">
+          <div id="round-dots" class="round-dots" role="group" aria-label="Evolve round"></div>
+        </div>
+      </div>
+
+      <div class="panel round-panel" id="round-hover" aria-live="polite">
+        <div class="panel-head" id="round-title">Round 0</div>
+        <div id="round-compare" class="round-compare"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= FIG 3 ======================= -->
+<section id="fig3" class="section">
+  <div class="wrap">
+    <h2><span class="fig-tag">Figure 3</span> The benchmark: 103 skill-sensitive pairs</h2>
+    <p class="section-lede">
+      From 607 task–skill pairs across three benchmarks, we screen the 103 where skills matter
+      most. <b>Toggle</b> the model-score chart between all tasks and the skill-sensitive suite;
+      <b>click a donut slice</b> to browse that category's tasks (the donut always describes the 103 selected pairs).
+    </p>
+
+    <div class="fig3-grid">
+      <div class="panel">
+        <div class="panel-head">
+          <div class="seg" role="group" aria-label="Task suite">
+            <button class="seg-btn active" data-suite="all" aria-pressed="true">All tasks (n = 607)</button>
+            <button class="seg-btn" data-suite="sensitive" aria-pressed="false">Skill-sensitive (n = 103)</button>
+          </div>
+        </div>
+        <div id="fig3dumbbell"></div>
+        <div class="legend-row">
+          <span class="lg"><span class="dot dot-wo"></span> w/o skill</span>
+          <span class="lg"><span class="dot dot-w"></span> w/ skill</span>
+          <span class="lg"><span class="swatch" style="background:#e8f1f6"></span> frontier</span>
+          <span class="lg"><span class="swatch" style="background:#faf1de"></span> moderate</span>
+          <span class="lg"><span class="swatch" style="background:#f8ece8"></span> weak</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">Task categories of the 103 selected pairs <span class="hint">click a slice or a legend entry</span></div>
+        <div class="donut-wrap">
+          <div id="fig3donut"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel donut-detail-panel">
+      <div id="donut-detail" class="donut-detail" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= FIG 4 ======================= -->
+<section id="fig4" class="section section-alt">
+  <div class="wrap">
+    <h2><span class="fig-tag">Figure 4</span> Method overview</h2>
+    <p class="section-lede">
+      We construct the meta-skill from cross-task failure attribution over four recurring failure
+      modes — instruction following, context management, tool execution, verification — and plug
+      it into the execute → evaluate → rewrite loop of harness self-evolution.
+    </p>
+    <div class="panel">
+      <img class="fig-img" src="assets/fig3_pipeline.png"
+           alt="Pipeline: constructing the meta-skill from diverse task sources and cross-task failure attribution, then using it inside the execute-evaluate-rewrite self-evolution loop.">
+    </div>
+
+    <div class="results-strip">
+      <div class="panel half">
+        <div class="panel-head">One-shot skill adaptation (Kimi-K3 rewrites)</div>
+        <img class="fig-img" src="assets/fig4_meta.png"
+             alt="Mean score on 103 pairs: original skill vs one-sentence instruction vs meta-skill, for Qwen3.6-flash, Qwen3.5-9B and Gemma-4-E4B.">
+        <p class="panel-note">The meta-skill beats both the original skill and a one-sentence
+          rewrite instruction for all three weak executors (+5.1 to +14.1 points).</p>
+      </div>
+      <div class="panel half">
+        <div class="panel-head">Five-round self-evolution (3 of 7 executors shown)</div>
+        <img class="fig-img" src="assets/fig5_rsi.png"
+             alt="Gain over baseline across five revision rounds, with and without the meta-skill, for Qwen3.6-flash, Gemma-4-E4B and Kimi-K2.5.">
+        <p class="panel-note">Three representative executors shown; across all seven — from
+          Gemma-4-E4B to Kimi-K2.5 — the meta-skill ends the loop +2.0 to +5.1 points above
+          the same loop without it.</p>
+      </div>
+    </div>
+    <div class="takeaways takeaways-3">
+      <div class="tk"><span class="tk-n">1</span> Through skill adaptation, a capable rewriter turns human-crafted skills that weak models could not use into skills they can use effectively.</div>
+      <div class="tk"><span class="tk-n">2</span> Distilling executor failure modes into a meta-skill improves skill adaptation by providing explicit guidance on what to revise and how.</div>
+      <div class="tk"><span class="tk-n">3</span> Given evidence of failure, weak models can use the meta-skill to self-evolve better skills, ending above self-evolution without it.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ======================= ABSTRACT ======================= -->
+<section id="abstract" class="section">
+  <div class="wrap abs-wrap">
+    <h2 class="center-h">Abstract</h2>
+    <div class="abs-stack">
+      <p class="abstract-text">
+      Harness self-evolution offers a practical route for LLM agents to improve from execution
+      experience without updating model parameters. Its effectiveness depends on whether models can
+      successfully act on the guidance provided by their harnesses. However, we find that harness
+      benefits are not uniform across model capabilities: skills that improve stronger models can
+      provide little benefit or even degrade performance for weaker ones. Across seven models and
+      three benchmarks, we identify 103 task–skill pairs where skills improve GPT-5.6-luna by 31.1
+      points but degrade Gemma-4-E4B by 8.8 points. In 86% of failed weak-model runs, the violated
+      requirement is already stated in the skill. This motivates <b>skill adaptation</b>:
+      reformulating existing skills to match the executor's capabilities and make their guidance
+      easier to execute. To achieve this, we diagnose failures in tool execution, context management,
+      instruction following, and verification, and distill these diagnoses into a fixed
+      <b>meta-skill</b> that guides adaptation during harness self-evolution. Guided by the
+      meta-skill, a capable external rewriter, Kimi-K3, adapts skills without execution evidence,
+      improving the three weak executors by 5.1–14.1 points over the original skills. We then
+      incorporate this adaptation into a five-round self-evolution loop, where each model revises
+      its own skill from execution trajectories and verifier feedback. Across seven executors, from
+      Gemma-4-E4B to Kimi-K2.5, the meta-skill consistently improves final scores by 2.0–5.1 points
+      over the same loop without the meta-skill. Our findings provide practical design guidance for
+      developing more effective self-evolution methods.
+    </p>
+      <div class="abs-video" id="video-sec">
+        <video controls muted loop playsinline preload="metadata" poster="assets/teaser_poster.jpg">
+          <source src="assets/teaser.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="bibtex">
+  <div class="wrap">
+    <p class="cite-head">BibTeX</p>
+    <pre class="bibtex">@article{yang2026evolving,
+  title  = {Evolving to Match Capabilities: Improving Harness Self-Evolution via Skill Adaptation},
+  author = {Yang, Zhihao and Wang, Haojin and Wu, Juncheng and Zhang, Kuan and Chen, Yukun
+            and Luo, Run and Lu, Yaojie and Zhou, Yuyin and Wang, Lu and Han, Xianpei},
+  year   = {2026}
+}</pre>
+    <p class="foot-note">Figure 3's scores are the paper's measured values (hover a row for exact numbers).
+      Figures 1 and 2 reproduce the paper's teaser figures, whose layouts are qualitative by design:
+      in Figure 1, hover a model for its measured numbers; Figure 2's curves are illustrative and the
+      measured result is the +2.0 to +5.1-point final gap reported in the paper.</p>
+  </div>
+</footer>
+
+</main>
+
+<div id="tooltip" class="tooltip" hidden></div>
+
+<script src="data.js?v=19"></script>
+<script src="main.js?v=19"></script>
+</body>
+</html>
