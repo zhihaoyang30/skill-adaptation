@@ -5,7 +5,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Evolving to Match Capabilities: Improving Harness Self-Evolution via Skill Adaptation</title>
 <meta name="description" content="Skills that improve strong LLM agents can degrade weak ones. We diagnose why, distill the diagnosis into a meta-skill, and use it to improve harness self-evolution across seven executors.">
-<link rel="stylesheet" href="style.css?v=19">
+<link rel="canonical" href="https://zhihaoyang30.github.io/skill-adaptation/">
+<meta property="og:title" content="Evolving to Match Capabilities: Improving Harness Self-Evolution via Skill Adaptation">
+<meta property="og:description" content="Skills that improve strong LLM agents can degrade weak ones. We diagnose why, distill the diagnosis into a meta-skill, and use it to improve harness self-evolution across seven executors.">
+<meta property="og:url" content="https://zhihaoyang30.github.io/skill-adaptation/">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://zhihaoyang30.github.io/skill-adaptation/assets/fig3_pipeline.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Evolving to Match Capabilities">
+<meta name="twitter:description" content="Improving harness self-evolution via skill adaptation across seven executors.">
+<meta name="twitter:image" content="https://zhihaoyang30.github.io/skill-adaptation/assets/fig3_pipeline.png">
+<meta name="citation_title" content="Evolving to Match Capabilities: Improving Harness Self-Evolution via Skill Adaptation">
+<meta name="citation_author" content="Yang, Zhihao">
+<meta name="citation_author" content="Wang, Haojin">
+<meta name="citation_author" content="Wu, Juncheng">
+<meta name="citation_author" content="Zhang, Kuan">
+<meta name="citation_author" content="Chen, Yukun">
+<meta name="citation_author" content="Luo, Run">
+<meta name="citation_author" content="Lu, Yaojie">
+<meta name="citation_author" content="Zhou, Yuyin">
+<meta name="citation_author" content="Wang, Lu">
+<meta name="citation_author" content="Han, Xianpei">
+<meta name="citation_publication_date" content="2026/10">
+<meta name="citation_arxiv_id" content="2610.33024">
+<meta name="citation_pdf_url" content="https://arxiv.org/pdf/2610.33024">
+<link rel="stylesheet" href="style.css?v=20">
 </head>
 <body>
 
@@ -16,6 +40,7 @@
     <div class="nav-links">
       <a href="#fig1">Teaser</a><a href="#fig2">Self-Evolution</a><a href="#fig3">Benchmark</a>
       <a href="#fig4">Method</a><a href="#abstract">Abstract</a><a href="#bibtex">BibTeX</a>
+      <a class="nav-cta" href="https://huggingface.co/papers/2610.33024" target="_blank" rel="noopener">Daily Paper</a>
     </div>
   </div>
 </nav>
@@ -31,15 +56,27 @@
     <h1>Evolving to Match Capabilities</h1>
     <p class="subtitle">Improving Harness Self-Evolution via <span class="hl">Skill Adaptation</span></p>
     <div class="authors">
-      <span><a href="https://zhihaoyang30.github.io/" target="_blank" rel="noopener">Zhihao Yang</a><sup>*</sup></span><span><a href="https://haojinw0027.github.io/" target="_blank" rel="noopener">Haojin Wang</a><sup>*</sup></span><span><a href="https://chtholly17.github.io/" target="_blank" rel="noopener">Juncheng Wu</a><sup>*</sup></span><span><a href="https://itheresaapocalypse.github.io/" target="_blank" rel="noopener">Kuan Zhang</a></span><span><a href="https://scholar.google.com/citations?user=JWxSJVgAAAAJ&amp;hl=zh-CN" target="_blank" rel="noopener">Yukun Chen</a></span><span><a href="https://rainbowluocs.github.io/" target="_blank" rel="noopener">Run Luo</a></span><span><a href="https://yaojie.lu/" target="_blank" rel="noopener">Yaojie Lu</a></span><span><a href="https://yuyinzhou.github.io/" target="_blank" rel="noopener">Yuyin Zhou</a></span><span><a href="https://openreview.net/profile?id=~Lu_Wang26" target="_blank" rel="noopener">Lu Wang</a><sup>†</sup></span><span><a href="https://scholar.google.com/citations?user=pA88bm4AAAAJ&amp;hl=en" target="_blank" rel="noopener">Xianpei Han</a><sup>†</sup></span>
+      <span><a href="https://zhihaoyang30.github.io/" target="_blank" rel="noopener">Zhihao Yang</a><sup>1,7,*</sup></span><span><a href="https://haojinw0027.github.io/" target="_blank" rel="noopener">Haojin Wang</a><sup>2,*</sup></span><span><a href="https://chtholly17.github.io/" target="_blank" rel="noopener">Juncheng Wu</a><sup>3,*</sup></span><span><a href="https://itheresaapocalypse.github.io/" target="_blank" rel="noopener">Kuan Zhang</a><sup>4</sup></span><span><a href="https://scholar.google.com/citations?user=JWxSJVgAAAAJ&amp;hl=zh-CN" target="_blank" rel="noopener">Yukun Chen</a><sup>1</sup></span><span><a href="https://rainbowluocs.github.io/" target="_blank" rel="noopener">Run Luo</a><sup>5</sup></span><span><a href="https://yaojie.lu/" target="_blank" rel="noopener">Yaojie Lu</a><sup>6</sup></span><span><a href="https://yuyinzhou.github.io/" target="_blank" rel="noopener">Yuyin Zhou</a><sup>3</sup></span><span><a href="https://openreview.net/profile?id=~Lu_Wang26" target="_blank" rel="noopener">Lu Wang</a><sup>4,†</sup></span><span><a href="https://scholar.google.com/citations?user=pA88bm4AAAAJ&amp;hl=en" target="_blank" rel="noopener">Xianpei Han</a><sup>6,†</sup></span>
     </div>
+    <p class="author-note affils">
+      <span><sup>1</sup>University of Chinese Academy of Sciences</span>
+      <span><sup>2</sup>Independent Researcher</span>
+      <span><sup>3</sup>University of California, Santa Cruz</span>
+      <span><sup>4</sup>Tsinghua University</span>
+      <span><sup>5</sup>National University of Singapore</span>
+      <span><sup>6</sup>Chinese Information Processing Laboratory, Institute of Software, Chinese Academy of Sciences</span>
+      <span><sup>7</sup>School of Advanced Interdisciplinary Sciences, University of Chinese Academy of Sciences</span>
+    </p>
     <p class="author-note"><sup>*</sup> equal contribution · <sup>†</sup> corresponding authors</p>
+    <p class="author-note mail">Correspondence: <a href="mailto:yangzhihao25@mails.ucas.ac.cn">yangzhihao25@mails.ucas.ac.cn</a></p>
     <nav class="hero-links">
       <a class="btn btn-solid" href="paper.pdf" target="_blank" rel="noopener"><svg class="bi" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M14 2v6h6M9 13h6M9 17h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Paper</a>
+      <a class="btn btn-daily" href="https://huggingface.co/papers/2610.33024" target="_blank" rel="noopener"><span class="hf" aria-hidden="true">🤗</span>Daily Paper</a>
       <a class="btn btn-ghost" href="https://arxiv.org/abs/2610.33024" target="_blank" rel="noopener"><svg class="bi" viewBox="0 0 24 24"><path d="M5 4l10 16M19 4L9 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>arXiv</a>
       <a class="btn btn-ghost" href="https://github.com/zhihaoyang30/skill-adaptation-code" target="_blank" rel="noopener"><svg class="bi" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>Code</a>
       <a class="btn btn-ghost" href="#video-sec"><svg class="bi" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 8.5v7l6-3.5z" fill="currentColor"/></svg>Video</a>
     </nav>
+    <p class="daily-paper-support"><strong>If you find this work useful, please upvote our <a href="https://huggingface.co/papers/2610.33024" target="_blank" rel="noopener">Daily Paper</a> on Hugging Face.<br>Thank you for your support!</strong></p>
   </div>
   <button id="vidctl" class="vid-ctl" aria-label="Replay background video">↻</button>
   <a class="scroll-cue" href="#fig1" aria-label="Scroll to content">⌄</a>
@@ -242,7 +279,7 @@
 
 <div id="tooltip" class="tooltip" hidden></div>
 
-<script src="data.js?v=19"></script>
-<script src="main.js?v=19"></script>
+<script src="data.js?v=20"></script>
+<script src="main.js?v=20"></script>
 </body>
 </html>
