@@ -94,13 +94,6 @@ h1, h2 { font-family: var(--serif); color: var(--ink-dark); }
 .authors a { color: inherit; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,.35); }
 .authors a:hover { color: #cfc6ff; border-bottom-color: #cfc6ff; }
 .author-note { margin-top: 10px; font-size: 12.5px; color: rgba(255,255,255,.55); }
-.author-note.affils {
-  max-width: 920px; margin-left: auto; margin-right: auto;
-  display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px;
-  line-height: 1.55;
-}
-.author-note.mail a { color: rgba(255,255,255,.78); text-decoration: underline; text-underline-offset: 2px; }
-.author-note.mail a:hover { color: #fff; }
 .author-note sup { font-size: 10px; }
 .hero-links { margin-top: 28px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 .btn-ghost { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.55); color: #fff; }
@@ -114,14 +107,13 @@ h1, h2 { font-family: var(--serif); color: var(--ink-dark); }
 .btn-daily:hover { background: #ffe493; border-color: #ffe493; color: #1a1a1a; }
 .btn-daily .hf { font-size: 15px; line-height: 1; }
 .daily-paper-support {
-  margin: 20px auto 0; max-width: 760px;
-  color: #fff; font-size: clamp(15px, 1.4vw, 17px);
-  font-weight: 700; line-height: 1.65;
+  margin: 16px auto 0; max-width: 640px;
+  color: rgba(255,255,255,.78); font-size: 14px;
+  font-weight: 500; line-height: 1.5;
 }
 .daily-paper-support a {
-  color: #ffd86b; font-weight: inherit;
-  text-decoration: underline; text-decoration-color: currentColor;
-  text-underline-offset: 3px;
+  color: #ffd86b; font-weight: 600;
+  text-decoration: underline; text-underline-offset: 3px;
 }
 .daily-paper-support a:hover { color: #ffe493; }
 .nav-cta {
